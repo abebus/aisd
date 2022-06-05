@@ -1,21 +1,5 @@
-def braces_check(exp):
-	stack = []
-	for char in exp:
-		if char == '(':
-			stack.append(char)
-		elif char == ')':
-			if stack:
-				stack.pop()
-			else:
-				return False
-	if not stack:
-		return True
-	return False
-
-
 def is_operator(s):
-	if s in '*+-':
-		print(s)
+	if s in '*+-()':
 		return True
 	return False
 
@@ -79,50 +63,9 @@ class Exp:
 		for i in range(len(self.tree)):
 			out += f'Index: {i} Val: {self.tree[i].val} left: {self.tree[i].left} right: {self.tree[i].right}\n'
 		return out
-	
-	def braces(self, root, arr):
-		if root.val != '':
-			if is_operator(root.val):
-				arr.append('(')
-			self.braces(self.tree[root.left], arr)
-			arr.append(root.val)
-			self.braces(self.tree[root.right], arr)
-			
-			if is_operator(root.val):
-				arr.append(')')
 
-	def calc(self, exp):
-		def preproc(a, stack):
-			print(stack)
-			b = float(stack.pop())
-			oprtr = stack.pop()
-			a = float(stack.pop())
-			
-			if oprtr == '+':
-				a += b
-			elif oprtr == '-':
-				a -= b
-			elif oprtr == '*':
-				a *= b
 
-			return a, stack
-		
-		stack = []
-		c = 0
-		x = 0
-		for char in exp:
-			stack.append(char)
-			if char == ')':
-				stack.pop()
-				x, stack = preproc(x, stack)
-				stack.pop()
-				stack.append(x)
-			if c == len(exp) - 1:
-				x, stack = preproc(x, stack)
-			c += 1
-		return x
-
-def exp_tolist(exp: str):
+def exp_tolist(exp: str) -> list:
 	tmp = ''
 	for char in exp:
 		if char.isnumeric():
@@ -134,6 +77,22 @@ def exp_tolist(exp: str):
 			tmp = ''
 	if tmp:
 		yield tmp
+		
+		
+def braces_check(exp: str) -> bool:
+	stack = []
+	for char in exp:
+		if char == '(':
+			stack.append(char)
+		elif char == ')':
+			if stack:
+				stack.pop()
+			else:
+				return False
+	if not stack:
+		return True
+	return False
+
 
 if __name__ == '__main__':
 	working = True
@@ -144,8 +103,12 @@ if __name__ == '__main__':
 			continue
 		if not braces_check(usrinp):
 			print('unbalanced braces')
+			continue
 		exp = list(exp_tolist(usrinp))
-		print(exp)
 		calculator = Exp(len(exp))
-		print(calculator.calc(exp))
+		a = []
+		for elem in exp:
+			calculator.insert(calculator.braces(elem, a))
+		print(calculator)
+		#print(calculator.calc())
 	
