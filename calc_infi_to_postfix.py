@@ -1,3 +1,17 @@
+def braces_check(exp: str) -> bool:
+	stack = []
+	for char in exp:
+		if char == '(':
+			stack.append(char)
+		elif char == ')':
+			if stack:
+				stack.pop()
+			else:
+				return False
+	if not stack:
+		return True
+	return False
+
 def infix_to_postfix(epx: list) -> list:
 	operators = ['+', '-', '*', '/', '(', ')', '^']
 	priority = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
@@ -60,7 +74,7 @@ def calculate(exp: list[str]) -> float:
 			calc_stack.append(operator(x, y, elem))
 	
 	return calc_stack
-		
+
 	
 if __name__ == '__main__':
 	alive = True
@@ -69,7 +83,11 @@ if __name__ == '__main__':
 		if usrinp in set(['exit', 'end', 'e', 'kill', 'stop']):
 			alive = False
 			continue
-		expression = usrinp
+		if braces_check(usrinp):
+			expression = usrinp
+		else:
+			print('unbalanced braces')
+			continue
 		expression = list(exp_tolist(expression))
 		expression = infix_to_postfix(expression)
 		print(calculate(expression))
