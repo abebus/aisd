@@ -79,7 +79,7 @@ def calculate(exp: list[str]) -> float:
 if __name__ == '__main__':
 	alive = True
 	while alive:
-		usrinp = input()
+		usrinp = input().strip().replace(" ", "")
 		if usrinp in set(['exit', 'end', 'e', 'kill', 'stop']):
 			alive = False
 			continue
